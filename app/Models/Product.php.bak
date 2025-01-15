@@ -1,0 +1,83 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Tags\HasTags;
+
+class Product extends Model
+{
+    use HasFactory;
+    // use HasTags;
+
+    protected $fillable = [
+        'name',
+        'slug',
+        'description',
+        'price',
+        // 'images',
+        // 'discount',
+        // 'dimensions',
+        // 'weight',
+        'cover',
+        // 'quantity',
+    ];
+
+    protected $casts = [
+        'images' => 'array'
+    ];
+
+    // public function images()
+    // {
+    //     return $this->hasMany(ProductImage::class);
+    // }
+
+    // public function categories()
+    // {
+    //     return $this->belongsToMany(Category::class);
+    // }
+
+    // public function colors()
+    // {
+    //     return $this->belongsToMany(Color::class);
+    // }
+
+    // public function materials()
+    // {
+    //     return $this->belongsToMany(Material::class);
+    // }
+
+    // Accessor voor geformatteerde prijs
+    public function getFormattedPriceAttribute()
+    {
+        return '€ ' . number_format($this->price / 100, 2, ',', '.');
+    }
+
+    // Accessor voor geformatteerde korting prijs
+    // public function getFormattedDiscountPriceAttribute()
+    // {
+    //     return '€ ' . number_format($this->discountPrice() / 100, 2, ',', '.');
+    // }
+
+    // Accessor voor geformatteerde besparing
+    // public function getFormattedDiscountSavingsAttribute()
+    // {
+    //     return '€ ' . number_format($this->discountSavings() / 100, 2, ',', '.');
+    // }
+
+    // Methode om de prijs met korting te berekenen
+    // public function discountPrice()
+    // {
+    //     if ($this->discount > 0) {
+    //         return $this->price * (1 - $this->discount / 100);
+    //     }
+    //     return $this->price;
+    // }
+
+    // Methode om de besparing te berekenen
+    // public function discountSavings()
+    // {
+    //     return $this->price - $this->discountPrice();
+    // }
+}

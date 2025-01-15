@@ -1,0 +1,86 @@
+<div>
+
+    <style>
+        #popover-1 {}
+
+        #popover-1:popover-open {}
+
+        .popover-button {
+            padding: 0;
+            background-color: grey;
+            border-radius: 100vw;
+            aspect-ratio: 1;
+
+            /* anchor-name: --pop-btn-1; */
+        }
+
+        /* [popovertarget="popover-1"], */
+        .popover-menu {}
+
+        /* .popover-menu:popover-open {
+            display: grid;
+            background-color: gray;
+        } */
+
+        button[popovertarget="popover-1"] {
+            anchor-name: --pop-btn-1;
+        }
+
+        div[popover] {
+            position: absolute;
+            position-anchor: --pop-btn-1;
+            margin: 0;
+            inset: auto;
+            top: anchor(--pop-btn-1 bottom);
+            right: anchor(--pop-btn-1 right);
+            margin-block-start: 6px;
+
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            transition-behavior: allow-discrete;
+
+            &:popover-open {
+                display: grid;
+                gap: 0.5rem;
+                background-color: white;
+                opacity: 1;
+            }
+
+            &::backdrop {
+                background-color: rgba(0, 0, 0, 0.5);
+                transition: opacity 1s ease-in-out;
+                transition-behavior: allow-discrete;
+            }
+
+            @starting-style {
+                &:popover-open {
+                    opacity: 0;
+                }
+
+                &::backdrop {
+                    opacity: 0;
+                }
+            }
+        }
+    </style>
+
+    <button
+        popovertarget="popover-1"
+        class="popover-button"
+    >Open</button>
+
+    <div
+        id="popover-1"
+        class="popover-menu"
+        popover
+    >
+        <button
+            popoveraction="hide"
+            popovertarget="popover-1"
+        >close</button>
+        Popover content
+    </div>
+
+</div>

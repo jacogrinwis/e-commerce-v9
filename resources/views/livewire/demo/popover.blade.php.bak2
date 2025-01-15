@@ -1,0 +1,84 @@
+<style>
+    .popover-btn-open {
+        margin-block-start: 1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 100vw;
+        background-color: red;
+        color: white;
+    }
+
+    .popover-btn-close {
+        padding: 0.5rem 1rem;
+        border-radius: 100vw;
+        background-color: black;
+        color: white;
+    }
+
+    .popover-menu {
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        gap: 0.5rem;
+        opacity: 0;
+        transition: display 1s, opacity 1s;
+        transition-behavior: allow-discrete;
+
+        &:popover-open {
+            display: grid;
+            background-color: yellow;
+            border: 1px solid black;
+            opacity: 1;
+        }
+
+        &::backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+            transition-property: opacity display overlay;
+            transition: opacity 1s;
+            transition-behavior: allow-discrete;
+            opacity: 1;
+        }
+
+        @starting-style {
+            &:popover-open {
+                opacity: 0;
+            }
+
+            &::backdrop {
+                opacity: 0;
+            }
+        }
+    }
+
+    @starting-style {
+        [popover-open]::backdrop {
+            opacity: 0;
+        }
+    }
+</style>
+
+
+
+<button
+    class="popover-btn-open"
+    popovertarget="pop-1"
+>
+    open
+</button>
+
+
+<div
+    id="pop-1"
+    class="popover-menu"
+    popover
+>
+
+    <button
+        class="popover-btn-close"
+        popoveraction="hide"
+        popovertarget="pop-1"
+    >
+        close
+    </button>
+
+    <p>popover</p>
+
+</div>

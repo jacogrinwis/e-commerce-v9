@@ -1,0 +1,33 @@
+.state-one-btn {
+    transition: opacity, transform, overlay, display;
+    transition-duration: 1s;
+    transition-behavior: allow-discrete;
+    opacity: 0;
+}
+
+.state-one-btn:focus {
+    opacity: 1;
+}
+
+@starting-style {
+    .state-one-btn:focus {
+        opacity: 0;
+    }
+}
+
+.state-two-btn {
+    transition: opacity, transform, overlay, display;
+    transition-duration: 1s;
+    transition-behavior: allow-discrete;
+    opacity: 0;
+}
+
+.state-two-btn:focus {
+    opacity: 1;
+}
+
+@starting-style {
+    .state-two-btn:focus {
+        opacity: 0;
+    }
+}

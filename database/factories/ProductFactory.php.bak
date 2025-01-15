@@ -1,0 +1,35 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Product;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+ */
+class ProductFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        // $name = $this->faker->words(3, true);
+        return [
+            // 'name' => ucfirst($name),
+            'name' => $this->faker->words(3, true),
+            // 'slug' => Str::slug($name),
+            // 'description' => $this->faker->paragraph,
+            'price' => $this->faker->numberBetween(100, 9999),
+            // 'discount' => Arr::random([null, 10, 15, 30, 50]),
+            // 'dimensions' => $this->faker->numberBetween(10, 100) . ' x ' . $this->faker->numberBetween(10, 100) . ' x ' . $this->faker->numberBetween(10, 100) . ' cm',
+            // 'weight' => $this->faker->randomFloat(2, 0.1, 50),
+            // 'cover' => 'storage/products/covers/' . $this->faker->numberBetween(1, 30) . '.jpg',
+        ];
+    }
+}
