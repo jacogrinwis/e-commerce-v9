@@ -1,0 +1,104 @@
+<div
+    x-data="{
+        activeIndex: 0,
+        images: {{ Js::from($images) }},
+        {{-- scrollThumbnails() {
+            const container = document.getElementById('thumbnail-container');
+            const thumbnails = container.getElementsByTagName('img');
+            const thumbnail = thumbnails[this.activeIndex];
+            thumbnail.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        } --}}
+        scrollThumbnails() {
+            const container = document.getElementById('thumbnail-container');
+            if (!container) return;
+            const thumbnails = container.getElementsByTagName('img');
+            if (!thumbnails.length) return;
+            const thumbnail = thumbnails[this.activeIndex];
+            if (thumbnail) {
+                thumbnail.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+        }
+    }"
+    class="__max-w-md relative mx-auto focus:outline-none"
+    tabindex="0"
+    @keydown.left.prevent="activeIndex = activeIndex === 0 ? images.length - 1 : activeIndex - 1; scrollThumbnails()"
+    @keydown.right.prevent="activeIndex = activeIndex === images.length - 1 ? 0 : activeIndex + 1; scrollThumbnails()"
+>
+    {{-- Main image --}}
+    <div class="aspect-square w-full overflow-hidden rounded-md border">
+        <div
+            class="flex transition-transform duration-500"
+            :style="`transform: translateX(-${activeIndex * 100}%)`"
+        >
+            <template
+                x-for="image in images"
+                :key="image"
+            >
+                <img
+                    :src="image"
+                    alt="Product image"
+                    class="w-full flex-shrink-0 object-cover shadow"
+                >
+            </template>
+        </div>
+    </div>
+
+    {{-- Navigation arrows --}}
+    <button
+        @click="activeIndex = activeIndex === 0 ? images.length - 1 : activeIndex - 1; scrollThumbnails()"
+        class="absolute left-2 top-[45%] -translate-y-1/2 rounded-full bg-white/80 p-2 shadow hover:bg-white"
+    >
+        <svg
+            class="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+            />
+        </svg>
+    </button>
+
+    <button
+        @click="activeIndex = activeIndex === images.length - 1 ? 0 : activeIndex + 1; scrollThumbnails()"
+        class="absolute right-2 top-[45%] -translate-y-1/2 rounded-full bg-white/80 p-2 shadow hover:bg-white"
+    >
+        <svg
+            class="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+            />
+        </svg>
+    </button>
+
+
+    {{-- Thumbnails --}}
+    <div
+        id="thumbnail-container"
+        class="scrollbar-hide __space-x-2 mt-4 flex gap-2 overflow-x-auto scroll-smooth p-1"
+    >
+        <template
+            x-for="(image, index) in images"
+            :key="index"
+        >
+            <img
+                :src="image"
+                alt="Thumbnail"
+                class="h-16 w-16 flex-shrink-0 cursor-pointer rounded-md border object-cover shadow transition"
+                :class="index === activeIndex ? 'ring-2 ring-primary-500' : 'hover:ring-2 hover:ring-gray-300'"
+                @click="activeIndex = index; scrollThumbnails()"
+            >
+        </template>
+    </div>
+</div>

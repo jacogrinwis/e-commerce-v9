@@ -10,7 +10,7 @@
 
     <title>{{ $title ?? 'Page Title' }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/popover.css', 'resources/css/cart/mini-cart.css', 'resources/css/buttons.css'])
-    @stack('styles')
+    @livewireStyles
     <script type="module">
         if (!("anchorName" in document.documentElement.style)) {
             import("https://unpkg.com/@oddbird/css-anchor-positioning");
@@ -19,17 +19,19 @@
 </head>
 
 <body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-white">
-    <div class="container mx-auto px-4 py-8">
+    @include('partials.header')
+    {{-- <div class="container mx-auto px-4 py-8">
         <div class="flex justify-end">
-            {{-- <livewire:demo.popover /> --}}
-            {{-- <x-popover>test</x-popover> --}}
+            <livewire:demo.popover />
+            <x-popover>test</x-popover>
             <livewire:cart.mini-cart />
         </div>
-    </div>
+    </div> --}}
 
-    <main class="container mx-auto px-4 py-8">
-        {{ $slot }}
-    </main>
+    {{-- <main class="container mx-auto px-4 py-8"> --}}
+    {{ $slot }}
+    {{-- </main> --}}
+    @livewireScripts
 </body>
 
 </html>

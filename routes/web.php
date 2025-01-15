@@ -6,9 +6,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/', App\Livewire\Home::class)->name('home');
+
 Route::get('test-page', App\Livewire\TestPage::class);
 
 // Route::get('/shop', App\Livewire\Products\ProductList::class)->name('shop.product-list');
+
 Route::get('/products', App\Livewire\Products\ProductList::class)->name('products');
 Route::get('/product/{product:slug}', App\Livewire\Products\ProductDetails::class)->name('product.details');
 
