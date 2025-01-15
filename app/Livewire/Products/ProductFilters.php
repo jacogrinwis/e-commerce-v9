@@ -1,0 +1,248 @@
+<?php
+
+namespace App\Livewire\Products;
+
+use Spatie\Tags\Tag;
+use App\Models\Color;
+use App\Models\Product;
+use Livewire\Component;
+use App\Models\Category;
+use App\Models\Material;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Computed;
+use Illuminate\Support\Facades\DB;
+
+class ProductFilters extends Component
+{
+    public $selectedCategories = [];
+    public $selectedColors = [];
+    public $selectedMaterials = [];
+    public $selectedTags = [];
+    public $selectedStockStatuses = [];
+
+
+    public function updatedSelectedCategories()
+    {
+        $availableColors = $this->colorsWithCount()->pluck('id')->toArray();
+        $availableMaterials = $this->materialsWithCount()->pluck('id')->toArray();
+        $availableTags = $this->tagsWithCount()->pluck('name')->toArray();
+
+        $this->selectedColors = array_intersect($this->selectedColors, $availableColors);
+        $this->selectedMaterials = array_intersect($this->selectedMaterials, $availableMaterials);
+        $this->selectedTags = array_intersect($this->selectedTags, $availableTags);
+
+        $this->dispatch('applyCategoryFilter', $this->selectedCategories);
+        $this->dispatch('applyColorFilter', $this->selectedColors);
+        $this->dispatch('applyMaterialFilter', $this->selectedMaterials);
+        $this->dispatch('applyTagFilter', $this->selectedTags);
+    }
+
+    public function resetSelectedCategories()
+    {
+        $this->selectedCategories = [];
+        $this->dispatch('applyCategoryFilter', $this->selectedCategories);
+    }
+
+    #[On('updateCategorySelection')]
+    public function updateCategorySelection($categories)
+    {
+        $this->selectedCategories = $categories;
+        $this->dispatch('applyCategoryFilter', $this->selectedCategories);
+    }
+
+
+
+    public function updatedSelectedColors()
+    {
+        $this->dispatch('applyColorFilter', $this->selectedColors);
+    }
+
+    public function resetSelectedColors()
+    {
+        $this->selectedColors = [];
+        $this->dispatch('applyColorFilter', $this->selectedColors);
+    }
+
+    #[On('updateColorSelection')]
+    public function updateColorSelection($colors)
+    {
+        $this->selectedColors = $colors;
+        $this->dispatch('applyColorFilter', $this->selectedColors);
+    }
+
+
+
+    public function updatedSelectedMaterials()
+    {
+        $this->dispatch('applyMaterialFilter', $this->selectedMaterials);
+    }
+
+    public function resetSelectedMaterials()
+    {
+        $this->selectedMaterials = [];
+        $this->dispatch('applyMaterialFilter', $this->selectedMaterials);
+    }
+
+    #[On('updateMaterialSelection')]
+    public function updateMaterialSelection($materials)
+    {
+        $this->selectedMaterials = $materials;
+        $this->dispatch('applyMaterialFilter', $this->selectedMaterials);
+    }
+
+
+
+    public function updatedSelectedTags()
+    {
+        $this->dispatch('applyTagFilter', $this->selectedTags);
+    }
+
+    public function resetSelectedTags()
+    {
+        $this->selectedTags = [];
+        $this->dispatch('applyTagFilter', $this->selectedTags);
+    }
+
+    #[On('updateTagSelection')]
+    public function updateTagSelection($tags)
+    {
+        $this->selectedTags = $tags;
+        $this->dispatch('applyTagFilter', $this->selectedTags);
+    }
+
+
+
+    public function updatedSelectedStockStatuses()
+    {
+        $this->dispatch('applyStockStatusFilter', $this->selectedStockStatuses);
+    }
+
+    public function resetSelectedStockStatuses()
+    {
+        $this->selectedStockStatuses = [];
+        $this->dispatch('applyStockStatusFilter', $this->selectedStockStatuses);
+    }
+
+    #[On('updateStockStatusSelection')]
+    public function updateStockStatusSelection($stockStatuses)
+    {
+        $this->selectedStockStatuses = $stockStatuses;
+        $this->dispatch('applyStockStatusFilter', $this->selectedStockStatuses);
+    }
+
+
+
+    #[Computed]
+    public function categoriesWithCount()
+    {
+        return cache()->remember('categories_with_count', now()->addMinutes(60), function () {
+            return Category::withCount('products')->get();
+        });
+    }
+
+    public function colorsWithCount()
+    {
+        $query = Color::withCount('products');
+
+        if (!empty($this->selectedCategories)) {
+            $query->whereHas('products', function ($q) {
+                $q->whereIn('category_id', $this->selectedCategories);
+            });
+        }
+
+        return $query->get();
+    }
+
+    public function materialsWithCount()
+    {
+        $query = Material::withCount('products');
+
+        if (!empty($this->selectedCategories)) {
+            $query->whereHas('products', function ($q) {
+                $q->whereIn('category_id', $this->selectedCategories);
+            });
+        }
+
+        return $query->get();
+    }
+
+    public function tagsWithCount()
+    {
+        $query = Tag::query()
+            ->select('tags.*')
+            ->selectRaw('COUNT(DISTINCT taggables.taggable_id) as products_count')
+            ->join('taggables', 'tags.id', '=', 'taggables.tag_id')
+            ->where('taggables.taggable_type', Product::class)
+            ->groupBy('tags.id');
+
+        if (!empty($this->selectedCategories)) {
+            $query->whereExists(function ($subquery) {
+                $subquery->select(DB::raw(1))
+                    ->from('products')
+                    ->whereColumn('products.id', 'taggables.taggable_id')
+                    ->whereIn('products.category_id', $this->selectedCategories);
+            });
+        }
+
+        return $query->get();
+    }
+
+    public function stockStatusesWithCount()
+    {
+        $query = Product::query();
+
+        if (!empty($this->selectedCategories)) {
+            $query->whereIn('category_id', $this->selectedCategories);
+        }
+
+        return $query->groupBy('stock_status')
+            ->selectRaw('stock_status, count(*) as count')
+            ->pluck('count', 'stock_status');
+    }
+
+
+
+
+    public function getStockStatusLabel($status)
+    {
+        $labels = [
+            1 => 'Op voorraad',
+            2 => 'Op bestelling',
+            3 => 'Tijdelijk uitverkocht',
+        ];
+        return $labels[$status] ?? 'Unknown';
+    }
+
+
+
+    #[On('resetAllFilters')]
+    public function clearAllFilters()
+    {
+        $this->selectedCategories = [];
+        $this->selectedColors = [];
+        $this->selectedMaterials = [];
+        $this->selectedTags = [];
+        $this->selectedStockStatuses = [];
+        $this->dispatch('applyCategoryFilter', $this->selectedCategories);
+        $this->dispatch('applyColorFilter', $this->selectedColors);
+        $this->dispatch('applyMaterialFilter', $this->selectedMaterials);
+        $this->dispatch('applyTagFilter', $this->selectedTags);
+        $this->dispatch('applyStockStatusFilter', $this->selectedStockStatuses);
+    }
+
+    public function render()
+    {
+        return view('livewire.products.product-filters', [
+            'categories' => $this->categoriesWithCount(),
+            'colors' => $this->colorsWithCount(),
+            'materials' => $this->materialsWithCount(),
+            'tags' => $this->tagsWithCount(),
+            'stockStatuses' => $this->stockStatusesWithCount(),
+            'categoriesCount' => $this->categoriesWithCount()->count(),
+            'colorsCount' => $this->colorsWithCount()->count(),
+            'materialsCount' => $this->materialsWithCount()->count(),
+            'tagsCount' => $this->tagsWithCount()->count(),
+            'stockStatusesCount' => $this->stockStatusesWithCount()->count(),
+        ]);
+    }
+}
