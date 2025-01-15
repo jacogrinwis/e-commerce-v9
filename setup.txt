@@ -1,0 +1,23 @@
+###################################################################################################################
+# Laravel livewire
+###################################################################################################################
+composer require livewire/livewire
+
+###################################################################################################################
+# Laravel Debugbar
+###################################################################################################################
+composer require barryvdh/laravel-debugbar --dev
+
+###################################################################################################################
+# Laravel Tailwind Merge
+###################################################################################################################
+composer require gehrisandro/tailwind-merge-laravel
+php artisan vendor:publish --provider="TailwindMerge\Laravel\TailwindMergeServiceProvider"
+
+###################################################################################################################
+# Laravel Spatie Tags
+###################################################################################################################
+composer require spatie/laravel-tags
+php artisan vendor:publish --provider="Spatie\Tags\TagsServiceProvider" --tag="tags-migrations"
+php artisan migrate
+php artisan vendor:publish --provider="Spatie\Tags\TagsServiceProvider" --tag="tags-config"
