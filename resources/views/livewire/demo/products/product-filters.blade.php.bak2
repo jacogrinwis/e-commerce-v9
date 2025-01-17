@@ -1,0 +1,80 @@
+{{-- @php
+    $items = [['id' => 1, 'title' => 'Title 1'], ['id' => 2, 'title' => 'Title 2'], ['id' => 3, 'title' => 'Title 3']];
+@endphp
+
+<div
+    x-data="{ selected: 1 }"
+    class="w-96 p-6"
+>
+
+    <ul class="rounded border border-gray-200">
+
+        @foreach ($items as $item)
+            <li class="relative">
+
+                <button
+                    @click="selected !== {{ $item['id'] }} ? selected = {{ $item['id'] }} : selected = null"
+                    class="w-full border-b border-gray-200 p-4 text-left"
+                >
+                    {{ $item['title'] }}
+                </button>
+
+                <div
+                    x-ref="container{{ $item['id'] }}"
+                    :style="selected == {{ $item['id'] }} ? 'max-height: ' + $refs.container{{ $item['id'] }}.scrollHeight +
+                        'px' : ''"
+                    class="max-h-0 overflow-hidden transition-all duration-1000"
+                >
+                    <div
+                        x-show="selected == {{ $item['id'] }}"
+                        class="p-4"
+                        :class="{ 'border-b border-gray-200': !{{ $loop->last }} }"
+                    >
+                        <p>
+                            {!! file_get_contents('http://loripsum.net/api/1/short') !!}
+                        </p>
+                    </div>
+                </div>
+
+            </li>
+        @endforeach
+
+    </ul>
+
+</div> --}}
+
+@php
+    $items = [['id' => 1, 'title' => 'Title 1'], ['id' => 2, 'title' => 'Title 2'], ['id' => 3, 'title' => 'Title 3']];
+    $content =
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi eos quod fugiat iure neque laboriosam.';
+@endphp
+
+<div
+    x-data="{ selected: 1 }"
+    class="w-96 p-6"
+>
+    <ul class="rounded border border-gray-200">
+        @foreach ($items as $item)
+            <li>
+                <button
+                    @click="selected !== {{ $item['id'] }} ? selected = {{ $item['id'] }} : selected = null"
+                    class="w-full border-b border-gray-200 p-4 text-left"
+                >
+                    {{ $item['title'] }}
+                </button>
+
+                <div
+                    x-ref="container{{ $item['id'] }}"
+                    :style="selected == {{ $item['id'] }} ? 'max-height: ' + $refs.container{{ $item['id'] }}.scrollHeight +
+                        'px' : 'max-height: 0px'"
+                    x-bind:class="$el.style.maxHeight === '0px' ? '' : 'border-b border-gray-200'"
+                    class="overflow-hidden transition-all duration-1000"
+                >
+                    <div class="p-4">
+                        <p>{{ $content }}</p>
+                    </div>
+                </div>
+            </li>
+        @endforeach
+    </ul>
+</div>

@@ -1,7 +1,7 @@
 <div class="space-y-6">
     <div>
         <h2 class="mb-1">
-            <span class="text-lg font-semibold">Categories ({{ $counts['categories'] }})</span>
+            <span class="text-lg font-semibold">Categories ({{ $categoriesCount }})</span>
             @if (count($selectedCategories) > 0)
                 <button
                     wire:click="resetSelectedCategories"
@@ -47,7 +47,7 @@
     </div>
     <div>
         <h2 class="mb-1">
-            <span class="text-lg font-semibold">Colors ({{ $counts['colors'] }})</span>
+            <span class="text-lg font-semibold">Colors ({{ $colorsCount }})</span>
             @if (count($selectedColors) > 0)
                 <button
                     wire:click="resetSelectedColors"
@@ -94,7 +94,7 @@
 
     <div>
         <h2 class="mb-1">
-            <span class="text-lg font-semibold">Materials ({{ $counts['materials'] }})</span>
+            <span class="text-lg font-semibold">Materials ({{ $materialsCount }})</span>
             @if (count($selectedMaterials) > 0)
                 <button
                     wire:click="resetSelectedMaterials"
@@ -141,7 +141,7 @@
 
     <div>
         <h2 class="mb-1">
-            <span class="text-lg font-semibold">Beschikbaarheid{{-- ({{ $counts['stockStatuses'] }}) --}}</span>
+            <span class="text-lg font-semibold">Beschikbaarheid <!--({{ $stockStatusesCount }})--></span>
             @if (count($selectedStockStatuses) > 0)
                 <button
                     wire:click="resetSelectedStockStatuses"
@@ -188,7 +188,7 @@
 
     <div>
         <h2 class="mb-1">
-            <span class="text-lg font-semibold">Tags ({{ $counts['tags'] }})</span>
+            <span class="text-lg font-semibold">Tags ({{ $tagsCount }})</span>
             @if (count($selectedTags) > 0)
                 <button
                     wire:click="resetSelectedTags"

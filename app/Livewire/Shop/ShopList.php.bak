@@ -1,0 +1,90 @@
+<?php
+
+namespace App\Livewire\Shop;
+
+use App\Models\Product;
+use Livewire\Component;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Reactive;
+
+class ShopList extends Component
+{
+    // public $selectedCategories = [];
+    // public $selectedColors = [];
+    // public $selectedMaterials = [];
+    // public $selectedTags = [];
+
+    #[Reactive]
+    public $selectedCategories = [];
+
+    #[Reactive]
+    public $selectedColors = [];
+
+    #[Reactive]
+    public $selectedMaterials = [];
+
+    #[Reactive]
+    public $selectedTags = [];
+
+    #[On('filters-updated')]
+    public function handleFilters($filters)
+    {
+        // dump('Received filters:', $filters);
+        // dump('Before update:', $this->selectedCategories);
+        // dump('In render, selectedCategories:', $this->selectedCategories);
+
+        match ($filters['type']) {
+            'categories' => $this->selectedCategories = (array)$filters['items'],
+            'colors' => $this->selectedColors = (array)$filters['items'],
+            'materials' => $this->selectedMaterials = (array)$filters['items'],
+            'tags' => $this->selectedTags = (array)$filters['items'],
+        };
+
+        $this->dispatch('$refresh');
+    }
+
+    public function render()
+    {
+        // $query = Product::query()
+        //     ->with(['category', 'tags']);
+
+        // if (!empty($this->selectedCategories)) {
+        //     $query->where('category_id', $this->selectedCategories);
+        // }
+        // if (!empty($this->selectedColors)) {
+        //     $query->whereHas('colors', fn($q) => $q->whereIn('colors.id', $this->selectedColors));
+        // }
+        // if (!empty($this->selectedMaterials)) {
+        //     $query->whereHas('materials', fn($q) => $q->whereIn('materials.id', $this->selectedMaterials));
+        // }
+        // if (!empty($this->selectedTags)) {
+        //     $query->whereHas('tags', fn($q) => $q->whereIn('tags.id', $this->selectedTags));
+        // }
+
+        $query = Product::query()
+            ->with(['category', 'tags']);
+
+        if ($this->selectedCategories) {
+            $query->whereIn('category_id', $this->selectedCategories);
+        }
+        if ($this->selectedColors) {
+            $query->whereIn('color_id', $this->selectedColors);
+        }
+        if ($this->selectedMaterials) {
+            $query->whereIn('material_id', $this->selectedMaterials);
+        }
+
+
+
+        $products = $query->latest()->get();
+        // dump($products->toArray());
+
+        // dump($query->toSql(), $query->getBindings());
+
+        // dump('Number of filtered products:', $products->count());
+
+        return view('livewire.shop.shop-list', [
+            'products' => $products
+        ]);
+    }
+}

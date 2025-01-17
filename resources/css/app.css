@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+[x-cloak] {
+    display: none;
+}
+
 /* @layer base {
     :root {
         --color-text-base: 255 255 255;

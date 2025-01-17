@@ -12,6 +12,7 @@ export default {
         "./resources/**/*.blade.php",
         "./resources/**/*.js",
         "./resources/**/*.vue",
+        "./node_modules/flowbite/**/*.js",
     ],
     safelist: [
         "animate-in",
@@ -60,37 +61,37 @@ export default {
                 "7xl": "80rem",
             },
         },
-        colors: {
-            ...colors,
-            primary: {
-                ...colors.teal,
-                DEFAULT: colors.teal[700],
-                hover: colors.teal[800],
-                dark: colors.teal[600],
-                "dark-hover": colors.teal[700],
-            },
-            secondary: {
-                ...colors.gray,
-                DEFAULT: colors.gray[800],
-                hover: colors.gray[900],
-                dark: colors.gray[800],
-                "dark-hover": colors.gray[700],
-            },
-
-            style1: {
-                DEFAULT: colors.gray[800],
-                hover: colors.gray[800],
-                dark: colors.gray[800],
-                "dark-hover": colors.gray[800],
-            },
-            style2: {
-                DEFAULT: colors.gray[800],
-                hover: colors.gray[800],
-                dark: colors.gray[800],
-                "dark-hover": colors.gray[800],
-            },
-        },
         extend: {
+            colors: {
+                ...colors,
+                primary: {
+                    ...colors.teal,
+                    DEFAULT: colors.teal[700],
+                    hover: colors.teal[800],
+                    dark: colors.teal[600],
+                    "dark-hover": colors.teal[700],
+                },
+                secondary: {
+                    ...colors.gray,
+                    DEFAULT: colors.gray[800],
+                    hover: colors.gray[900],
+                    dark: colors.gray[800],
+                    "dark-hover": colors.gray[700],
+                },
+
+                style1: {
+                    DEFAULT: colors.gray[800],
+                    hover: colors.gray[800],
+                    dark: colors.gray[800],
+                    "dark-hover": colors.gray[800],
+                },
+                style2: {
+                    DEFAULT: colors.gray[800],
+                    hover: colors.gray[800],
+                    dark: colors.gray[800],
+                    "dark-hover": colors.gray[800],
+                },
+            },
             keyframes: {
                 "btn-add-to-cart": {
                     "0%": {
@@ -115,6 +116,7 @@ export default {
     darkMode: "media", // 'class' or 'media'
     plugins: [
         require("tailwindcss-animate"),
+        require("flowbite/plugin"),
         plugin(function ({ addVariant, addUtilities }) {
             addVariant("popover-open", "&:popover-open");
             addVariant("starting", "@starting-style");
