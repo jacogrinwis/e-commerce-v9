@@ -41,7 +41,7 @@
 
     </div>
 
-    <div class="col-span-3 grid auto-rows-min grid-cols-4 gap-4 rounded-lg border border-red-100 bg-red-50 p-4 shadow">
+    <div class="col-span-3 grid auto-rows-min grid-cols-3 gap-4 rounded-lg border border-red-100 bg-red-50 p-4 shadow">
 
         @foreach ($products as $product)
             <div class="col-span-1 rounded-lg border border-blue-200 bg-blue-50 p-4 shadow">
@@ -50,8 +50,8 @@
                     alt="{{ $product->name }}"
                     class="aspect-square w-full rounded object-cover"
                 >
-                <h2>{{ $product->name }}</h2>
-                <p>{{ $product->formatted_price }}</p>
+                <h2 class="truncate text-base font-semibold">{{ $product->name }}</h2>
+                <p class="text-lg font-semibold">{{ $product->formatted_price }}</p>
             </div>
         @endforeach
 
