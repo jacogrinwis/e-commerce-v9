@@ -23,16 +23,8 @@ class ProductPage extends Component
     #[Computed]
     public function filteredProducts()
     {
-        // return Product::query()
-        $query = Product::query()
-            ->with(['category', 'colors', 'materials', 'tags']);
-
-        Log::channel('filter')->info("Stock status filter:", [
-            'selected' => $this->selectedStockStatuses,
-            'available_statuses' => Product::distinct()->pluck('stock_status')->toArray()
-        ]);
-
-        return $query
+        return Product::query()
+            ->with(['category', 'colors', 'materials', 'tags'])
             ->with(['category', 'colors', 'materials'])
             ->when($this->selectedCategories, function ($query) {
                 $query->whereHas('category', function ($q) {
